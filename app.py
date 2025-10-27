@@ -65,12 +65,7 @@ def create_vector_db(file_uploads):
             
         # Initialize embeddings with API key from environment
         # The API key is already set in os.environ, so we don't need to pass it explicitly
-        # embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
-        # force correct client (for new openai versions)
-        import openai
-
-        openai_client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        embeddings = OpenAIEmbeddings(model="text-embedding-3-small", client=openai_client)
+        embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
         all_chunks = []
 
         # Process each uploaded PDF file
