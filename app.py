@@ -43,19 +43,6 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Load secrets from Streamlit
-@st.cache_resource
-def get_api_keys():
-    """Load API keys from Streamlit secrets"""
-    try:
-        openai_key = st.secrets["OPENAI_API_KEY"]
-        groq_key = st.secrets.get("GROQ_API_KEY", "")
-        return openai_key, groq_key
-    except KeyError:
-        st.error("⚠️ Please configure OPENAI_API_KEY in Streamlit secrets")
-        st.stop()
-        return None, None
-
 def create_vector_db(file_uploads):
     """
     Create a vector database from multiple uploaded PDF files.
@@ -69,8 +56,11 @@ def create_vector_db(file_uploads):
     temp_dir = tempfile.mkdtemp()
     
     try:
-        # Initialize embeddings
-        embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+        # Initialize embeddings with explicit API key
+        embeddings = OpenAIEmbeddings(
+            model="text-embedding-3-small",
+            openai_api_key=os.getenv("OPENAI_API_KEY")
+        )
         all_chunks = []
 
         # Process each uploaded PDF file
@@ -114,8 +104,14 @@ def main():
         st.session_state['history'] = []
     
     # Get API keys from Streamlit secrets
-    openai_key, groq_key = get_api_keys()
-    os.environ["OPENAI_API_KEY"] = openai_key
+    try:
+        openai_key = st.secrets["OPENAI_API_KEY"]
+        groq_key = st.secrets.get("GROQ_API_KEY", "")
+        os.environ["OPENAI_API_KEY"] = openai_key
+    except KeyError:
+        st.error("⚠️ Please configure OPENAI_API_KEY in Streamlit secrets")
+        st.stop()
+        return
 
     # UI Setup
     st.title(":violet[Charlie Bot]")
@@ -137,10 +133,11 @@ def main():
             if 'vectors' not in st.session_state:
                 st.session_state['vectors'] = create_vector_db(uploaded_files)
                 
-                # Initialize LLM
+                # Initialize LLM with explicit API key
                 llm = ChatOpenAI(
                     model="gpt-4o-mini",
                     temperature=0.7,
+                    openai_api_key=os.getenv("OPENAI_API_KEY")
                 )
                 
                 # Setup retriever and chains
