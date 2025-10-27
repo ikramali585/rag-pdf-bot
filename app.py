@@ -56,11 +56,16 @@ def create_vector_db(file_uploads):
     temp_dir = tempfile.mkdtemp()
     
     try:
-        # Initialize embeddings with explicit API key
-        embeddings = OpenAIEmbeddings(
-            model="text-embedding-3-small",
-            openai_api_key=os.getenv("OPENAI_API_KEY")
-        )
+        # Get API key from environment
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            st.error("❌ OPENAI_API_KEY is not set. Please configure it in Streamlit secrets.")
+            st.stop()
+            return None
+            
+        # Initialize embeddings with API key from environment
+        # The API key is already set in os.environ, so we don't need to pass it explicitly
+        embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
         all_chunks = []
 
         # Process each uploaded PDF file
@@ -107,9 +112,21 @@ def main():
     try:
         openai_key = st.secrets["OPENAI_API_KEY"]
         groq_key = st.secrets.get("GROQ_API_KEY", "")
+        
+        # Set environment variable
         os.environ["OPENAI_API_KEY"] = openai_key
-    except KeyError:
-        st.error("⚠️ Please configure OPENAI_API_KEY in Streamlit secrets")
+        
+        # Verify the key is set
+        if not openai_key or openai_key.strip() == "":
+            st.error("⚠️ OPENAI_API_KEY is empty. Please configure it in Streamlit secrets.")
+            st.stop()
+            return
+    except KeyError as e:
+        st.error(f"⚠️ Missing OPENAI_API_KEY in Streamlit secrets. Error: {e}")
+        st.stop()
+        return
+    except Exception as e:
+        st.error(f"⚠️ Error loading secrets: {e}")
         st.stop()
         return
 
@@ -134,10 +151,16 @@ def main():
                 st.session_state['vectors'] = create_vector_db(uploaded_files)
                 
                 # Initialize LLM with explicit API key
+                api_key = os.getenv("OPENAI_API_KEY")
+                if not api_key:
+                    st.error("❌ OPENAI_API_KEY is not available for LLM initialization")
+                    st.stop()
+                    return
+                    
+                # LLM will use the API key from environment
                 llm = ChatOpenAI(
                     model="gpt-4o-mini",
-                    temperature=0.7,
-                    openai_api_key=os.getenv("OPENAI_API_KEY")
+                    temperature=0.7
                 )
                 
                 # Setup retriever and chains
