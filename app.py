@@ -131,7 +131,7 @@ def main():
         return
 
     # UI Setup
-    st.title(":violet[Charlie Bot]")
+    st.title(":violet[PDF Bot: Interact with your Document]")
     colored_header(label='', description='', color_name='gray-30')
     
     # Two-column layout
