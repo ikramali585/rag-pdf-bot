@@ -130,17 +130,91 @@ def main():
         st.stop()
         return
 
-    # UI Setup
-    st.title(":violet[PDF Bot: Chat with your Documents]")
-    colored_header(label='', description='', color_name='gray-30')
+    # # UI Setup
+    # st.title(":violet[PDF Bot: Chat with your Documents]")
+    # colored_header(label='', description='', color_name='gray-30')
+    
+    # # Two-column layout
+    # col1, col2 = st.columns([1.5, 2])
+    
+    # # File uploader
+    # uploaded_files = col1.file_uploader(
+    #     "Choose PDF files", 
+    #     type="pdf", 
+    #     accept_multiple_files=True
+    # )
+
+    
+    # ---------- Header (Top-right brand) ----------
+    st.markdown(
+        """
+        <style>
+          /* Make the main block a bit wider looking (optional) */
+          .block-container { padding-top: 2rem; }
+    
+          /* Top-right brand */
+          .brand-14labs {
+            position: fixed;
+            top: 16px;
+            right: 18px;
+            z-index: 9999;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 0.06em;
+            color: rgba(255,255,255,0.85); /* works well in dark themes */
+            background: rgba(0,0,0,0.25);
+            padding: 6px 10px;
+            border-radius: 10px;
+            backdrop-filter: blur(6px);
+          }
+    
+          /* Center title wrapper */
+          .page-title-wrap {
+            text-align: center;
+            margin-top: 0.25rem;
+            margin-bottom: 0.75rem;
+          }
+    
+          /* Big title */
+          .page-title {
+            font-size: 44px;
+            font-weight: 800;
+            line-height: 1.15;
+            margin: 0;
+          }
+    
+          /* Underline / design line */
+          .title-underline {
+            width: 220px;
+            height: 4px;
+            margin: 14px auto 0 auto;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #7c3aed, #a78bfa, #7c3aed);
+            opacity: 0.95;
+          }
+        </style>
+    
+        <div class="brand-14labs">14 Labs</div>
+    
+        <div class="page-title-wrap">
+          <h1 class="page-title">
+            <span style="color:#a78bfa;">PDF Bot:</span> Chat with your Documents
+          </h1>
+          <div class="title-underline"></div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    colored_header(label="", description="", color_name="gray-30")
     
     # Two-column layout
     col1, col2 = st.columns([1.5, 2])
     
     # File uploader
     uploaded_files = col1.file_uploader(
-        "Choose PDF files", 
-        type="pdf", 
+        "Choose PDF files",
+        type="pdf",
         accept_multiple_files=True
     )
 
