@@ -144,13 +144,11 @@ def main():
     #     accept_multiple_files=True
     # )
 
-    
-    # ---------- Header (Top-right brand) ----------
+
     st.markdown(
         """
         <style>
-          /* Make the main block a bit wider looking (optional) */
-          .block-container { padding-top: 2rem; }
+          .block-container { padding-top: 2.2rem; }
     
           /* Top-right brand */
           .brand-14labs {
@@ -158,13 +156,13 @@ def main():
             top: 16px;
             right: 18px;
             z-index: 9999;
-            font-weight: 700;
+            font-weight: 800;
             font-size: 14px;
-            letter-spacing: 0.06em;
-            color: rgba(255,255,255,0.85); /* works well in dark themes */
-            background: rgba(0,0,0,0.25);
+            letter-spacing: 0.08em;
+            color: rgba(255,255,255,0.9);
+            background: rgba(0,0,0,0.28);
             padding: 6px 10px;
-            border-radius: 10px;
+            border-radius: 12px;
             backdrop-filter: blur(6px);
           }
     
@@ -172,25 +170,29 @@ def main():
           .page-title-wrap {
             text-align: center;
             margin-top: 0.25rem;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.4rem;
           }
     
-          /* Big title */
+          /* Bigger title (responsive) */
           .page-title {
-            font-size: 44px;
-            font-weight: 800;
-            line-height: 1.15;
+            font-size: clamp(44px, 4.2vw, 72px);
+            font-weight: 900;
+            line-height: 1.08;
             margin: 0;
           }
     
-          /* Underline / design line */
-          .title-underline {
-            width: 220px;
-            height: 4px;
+          /* Full-width curved line container */
+          .title-wave-wrap {
+            width: 100%;
+            max-width: 1200px;     /* keep it elegant on huge screens */
             margin: 14px auto 0 auto;
-            border-radius: 999px;
-            background: linear-gradient(90deg, #7c3aed, #a78bfa, #7c3aed);
-            opacity: 0.95;
+            padding: 0 14px;       /* side breathing room */
+          }
+    
+          .title-wave {
+            width: 100%;
+            height: 26px;          /* wave height */
+            display: block;
           }
         </style>
     
@@ -200,14 +202,23 @@ def main():
           <h1 class="page-title">
             <span style="color:#a78bfa;">PDF Bot:</span> Chat with your Documents
           </h1>
-          <div class="title-underline"></div>
+    
+          <div class="title-wave-wrap">
+            <svg class="title-wave" viewBox="0 0 1200 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0,35 C200,10 400,55 600,35 C800,15 1000,55 1200,30"
+                    fill="none"
+                    stroke="#7c3aed"
+                    stroke-width="6"
+                    stroke-linecap="round"
+                    opacity="0.95"/>
+            </svg>
+          </div>
         </div>
         """,
         unsafe_allow_html=True
     )
     
     colored_header(label="", description="", color_name="gray-30")
-    
     # Two-column layout
     col1, col2 = st.columns([1.5, 2])
     
